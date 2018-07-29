@@ -5,11 +5,15 @@ contract GameWithBidQueue is Game {
 
 	function putInQueue(uint256 bid) public {
 		address currentBidder = queue[bid];
+		
 		// TODO accept bid payment
+		
 		if (currentBidder == 0) {
 			queue[bid] = msg.sender;
 		} else {
 			queue[bid] = 0;
+			
+			// TODO who is player1 who is player2
 			startGame(player1, player2, bid);
 		}
 	}
