@@ -1,22 +1,22 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 contract GameWithInvitations is Game {
-	mapping(address => mapping(address => bool) invitations;
+	mapping(address => mapping(address => bool)) invitations;
 	mapping(address => mapping(address => uint256)) invitationBids;
 
-	// TODO bid should be payment
-	function invite(address opponent, uint256 bid) public {
+	function invite(address opponent) public payable {
+		require(opponent != msg.sender);
+	
 		if (invitations[opponent][msg.sender]) {
-			require(invitationBids[opponent][msg.sender] == bid);
+			require(invitationBids[opponent][msg.sender] == msg.value);
 			
 			invitationBids[opponent][msg.sender] = 0;
 			invitations[opponent][msg.sender] = false;
 			
-			// TODO who is player1 who is player2
-			startGame(player1, player2, bid);
+			startGame(opponent, msg.sender, msg.value);
 		} else {
 			invitations[msg.sender][opponent] = true;
-			invitationBids[msg.sender][opponent] = bid;
+			invitationBids[msg.sender][opponent] = msg.value;
 		}
 	}
 	
@@ -29,8 +29,7 @@ contract GameWithInvitations is Game {
 		invitationBids[msg.sender][opponent] = 0;
 		
 		if (currentBid > 0) {
-			// TODO payback currentBid to sender
-			// nothing should follow
+			msg.sender.transfer(currentBid);
 		}
 	}
 }
