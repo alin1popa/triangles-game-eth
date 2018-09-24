@@ -22,31 +22,28 @@ contract Game is Ownable {
 	}
 	
 	function checkPlayerOneIsMoveAllowed(address player2) internal {
-		// TODO should this be in memory? or maybe replaced inline?
-		MoveState ms = moveStates[msg.sender][player2];
-		
-		require(ms.blockNumberOfLastMove > 0); // game is running
-		require(ms.player1ToMove == true); // player 1 is moving
+		// game is running
+		require(moveStates[msg.sender][player2].blockNumberOfLastMove > 0);
+		// player 1 is moving		
+		require(moveStates[msg.sender][player2].player1ToMove == true); 
+		// no round timeout yet
 		// TODO use safemaths
-		require(block.number - blocksPerRound <= ms.blockNumberOfLastMove); // no round timeout yet
+		require(block.number - blocksPerRound <= moveStates[msg.sender][player2].blockNumberOfLastMove); 
 	}
 	
 	function checkPlayerTwoIsMoveAllowed(address player1) internal {
-		// TODO should this be in memory? or maybe replaced inline?
-		MoveState ms = moveStates[player1][msg.sender];
-		
-		require(ms.blockNumberOfLastMove > 0); // game is running
-		require(ms.player1ToMove == false); // player 2 is moving
+		// game is running
+		require(moveStates[player1][msg.sender].blockNumberOfLastMove > 0);
+		// player 2 is moving
+		require(moveStates[player1][msg.sender].player1ToMove == false); 
+		// no round timeout yet
 		// TODO use safemaths
-		require(block.number - blocksPerRound <= ms.blockNumberOfLastMove); // no round timeout yet
+		require(block.number - blocksPerRound <= moveStates[player1][msg.sender].blockNumberOfLastMove); 
 	}
 	
 	function toggleMoveState(address player1, address player2) internal {
-		// TODO should this etc etc same as above
-		MoveState ms = moveStates[player1][player2];
-		
-		ms.player1ToMove = !(ms.player1ToMove);
-		ms.blockNumberOfLastMove = block.number;
+		moveStates[player1][player2].player1ToMove = !(moveStates[player1][player2].player1ToMove);
+		moveStates[player1][player2].blockNumberOfLastMove = block.number;
 	}
 	
 	function startGame(address player1, address player2, uint256 bid) internal;
