@@ -5,18 +5,19 @@ import "libs/Ownable.sol";
 contract Game is Ownable {
 	uint private blocksPerRound;
 
+	// TODO add extra bool for fair price
 	struct MoveState {
 		bool player1ToMove;
 		uint blockNumberOfLastMove;
 	}
 	
-	mapping(address => mapping(address => MoveState)) private moveStates;
+	mapping(address => mapping(address => MoveState)) internal moveStates;
 	
 	/**
 	 *	@dev Allows current owner to increase blocks per round
-	 *  because if blocks start being mined too fast in the future game may become unplayable
+	 *  because if blocks start being mined too fast in the future, game may become unplayable
 	 */
-	function inncreaseBlocksPerRound(uint newBlocksPerRound) public onlyOwner {
+	function increaseBlocksPerRound(uint newBlocksPerRound) public onlyOwner {
 		require(newBlocksPerRound > blocksPerRound);
 		blocksPerRound = newBlocksPerRound;
 	}
@@ -31,7 +32,7 @@ contract Game is Ownable {
 		require(block.number - blocksPerRound <= moveStates[msg.sender][player2].blockNumberOfLastMove); 
 	}
 	
-	function checkPlayerTwoIsMoveAllowed(address player1) internal {
+	function checkPlayerTwoIsMoveAllowed(address player1) internal view {
 		// game is running
 		require(moveStates[player1][msg.sender].blockNumberOfLastMove > 0);
 		// player 2 is moving
@@ -44,6 +45,16 @@ contract Game is Ownable {
 	function toggleMoveState(address player1, address player2) internal {
 		moveStates[player1][player2].player1ToMove = !(moveStates[player1][player2].player1ToMove);
 		moveStates[player1][player2].blockNumberOfLastMove = block.number;
+	}
+	
+	// TODO add payment stuff
+	
+	// TODO move payment stuff to GameWithPayments
+	
+	// TODO move prototypes only to GameAbstract or GameGeneric or smth
+	
+	function claimPlayerOneWinByTimeout(address player2) public {
+		
 	}
 	
 	function startGame(address player1, address player2, uint256 bid) internal;
