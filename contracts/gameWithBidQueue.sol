@@ -1,7 +1,7 @@
 pragma solidity ^0.4.25;
 
 contract GameWithBidQueue is Game {
-	mapping(uint256 => address) queue;
+	mapping(uint256 => address) private queue;
 
 	function putInQueue() public payable {
 		address currentBidder = queue[msg.value];
