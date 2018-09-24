@@ -13,6 +13,29 @@ contract Game is Ownable {
 	
 	mapping(address => mapping(address => MoveState)) internal moveStates;
 	
+	uint256 private ownerBalance;
+	mapping(address => mapping(address => uint256)) private bids;
+	
+	// TODO resetBid function
+	
+	function setupBidsForGame(address player1, address player2, uint256 bid) internal {
+		require(bids[player1][player2] == 0);
+		
+		// TODO ce se intampla daca bidul e sub whatever si nu merge impartirea
+		// TODO ce se intampla daca bidul e 0
+		// TODO use safemaths
+		uint256 ownersPart = bid/20;
+		bids[player1][player2] = bid - ownersPart;
+		ownerBalance = ownerBalance + ownersPart*2;
+	}
+	
+	function withdrawOwnerBalance() public onlyOwner {
+		uint256 toTransfer = ownerBalance;
+		ownerBalance = 0;
+		
+		msg.sender.transfer(toTransfer);
+	}
+	
 	/**
 	 *	@dev Allows current owner to increase blocks per round
 	 *  because if blocks start being mined too fast in the future, game may become unplayable
@@ -22,6 +45,7 @@ contract Game is Ownable {
 		blocksPerRound = newBlocksPerRound;
 	}
 	
+	// TODO check gas usage with ifs instead of requires => on false require eats up all the gas
 	function checkPlayerOneIsMoveAllowed(address player2) internal {
 		// game is running
 		require(moveStates[msg.sender][player2].blockNumberOfLastMove > 0);
@@ -54,6 +78,10 @@ contract Game is Ownable {
 	// TODO move prototypes only to GameAbstract or GameGeneric or smth
 	
 	function claimPlayerOneWinByTimeout(address player2) public {
+		require(moveStates[msg.sender][player2].blockNumberOfLastMove > 0);
+		require(moveStates[msg.sender][player2].player1ToMove == false); 
+		require(block.number - blocksPerRound > moveStates[msg.sender][player2].blockNumberOfLastMove);
+
 		
 	}
 	
