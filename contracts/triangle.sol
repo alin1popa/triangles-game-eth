@@ -46,5 +46,14 @@ contract TriangleGame is Game, GameWithBidQueue, GameWithInvitations {
 		moveStates[player1][player2] = MoveState(true, block.number);
 	}
 	
-	
+	function claimPlayerOneWinByRules(address player2, uint8 point1, uint8 point2, uint8 point3) public {
+		require(point1 < point2);
+		require(point2 < point3);
+		
+		require(boardStates[msg.sender][player2].boardPlayerOne[point1][point2] == true);
+		require(boardStates[msg.sender][player2].boardPlayerOne[point2][point3] == true);
+		require(boardStates[msg.sender][player2].boardPlayerOne[point1][point3] == true);
+		
+		
+	}
 }

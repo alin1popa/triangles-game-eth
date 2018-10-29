@@ -3,6 +3,8 @@ pragma solidity ^0.4.25;
 contract GameWithBidQueue is Game {
 	mapping(uint256 => address) private queue;
 
+	// TODO require gameIsNotStarted
+	
 	function putInQueue() public payable {
 		address currentBidder = queue[msg.value];
 		require(currentBidder != msg.sender);

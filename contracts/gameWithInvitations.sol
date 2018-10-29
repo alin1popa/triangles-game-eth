@@ -4,6 +4,8 @@ contract GameWithInvitations is Game {
 	mapping(address => mapping(address => bool)) private invitations;
 	mapping(address => mapping(address => uint256)) private invitationBids;
 
+	// TODO require gameIsNotStarted()
+	
 	function invite(address opponent) public payable {
 		require(opponent != msg.sender);
 	

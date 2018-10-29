@@ -77,12 +77,38 @@ contract Game is Ownable {
 	
 	// TODO move prototypes only to GameAbstract or GameGeneric or smth
 	
+	// TODO make everything non reentrable
+	
+	function setWinForPlayerOne(address player2) private {
+		uint256 toTransfer = bids[msg.sender][player2];
+		bids[msg.sender][player2] = 0;
+		moveStates[msg.sender][player2].blockNumberOfLastMove = 0;
+		
+		msg.sender.transfer(toTransfer);
+	}
+	
+	function setWinForPlayerTwo(address player1) private {
+		uint256 toTransfer = bids[player1][msg.sender];
+		bids[player1][msg.sender] = 0;
+		moveStates[player1][msg.sender].blockNumberOfLastMove = 0;
+		
+		msg.sender.transfer(toTransfer);
+	}
+	
 	function claimPlayerOneWinByTimeout(address player2) public {
 		require(moveStates[msg.sender][player2].blockNumberOfLastMove > 0);
 		require(moveStates[msg.sender][player2].player1ToMove == false); 
 		require(block.number - blocksPerRound > moveStates[msg.sender][player2].blockNumberOfLastMove);
 
-		
+		setWinForPlayerOne(player2);
+	}
+	
+	function claimPlayerTwoWinByTimeout(address player1) public {
+		require(moveStates[player1][msg.sender].blockNumberOfLastMove > 0);
+		require(moveStates[player1][msg.sender].player1ToMove == true); 
+		require(block.number - blocksPerRound > moveStates[player1][msg.sender].blockNumberOfLastMove);
+
+		setWinForPlayerTwo(player1);
 	}
 	
 	function startGame(address player1, address player2, uint256 bid) internal;
