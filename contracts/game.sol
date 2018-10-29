@@ -3,9 +3,13 @@ pragma solidity ^0.4.25;
 import "libs/Ownable.sol";
 
 contract Game is Ownable {
+	/* timeout period in number of blocks */
+	/* modifiable by owner */
+	/* can only be increased, never decreased */
 	uint private blocksPerRound;
 
 	// TODO add extra bool for fair price
+	/*  move state structure */
 	struct MoveState {
 		bool player1ToMove;
 		uint blockNumberOfLastMove; // 0 value means game is not running
@@ -47,6 +51,7 @@ contract Game is Ownable {
 		/* owner's part is 5% of the amount players put into contract */
 		uint256 ownersPart = bid/20;
 		
+		/* update state vars */
 		bids[player1][player2] = bid - ownersPart;
 		ownerBalance = ownerBalance + ownersPart*2;
 	}
