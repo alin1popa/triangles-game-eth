@@ -42,7 +42,7 @@ contract TriangleGame is Game, GameWithBidQueue, GameWithInvitations {
 	
 	function startGame(address player1, address player2, uint256 bid) internal {
 		boardStates[player1][player2] = BoardState();
-		moveStates[player1][player2] = MoveState(true, block.number);
+		initializeMoveState(player1, player2);
 	}
 	
 	function claimPlayerOneWinByRules(address player2, uint8 point1, uint8 point2, uint8 point3) public {
@@ -53,6 +53,8 @@ contract TriangleGame is Game, GameWithBidQueue, GameWithInvitations {
 		require(boardStates[msg.sender][player2].boardPlayerOne[point2][point3] == true);
 		require(boardStates[msg.sender][player2].boardPlayerOne[point1][point3] == true);
 		
-		
+		// TODO now what
 	}
+	
+	// TODO claim player 2 win by rules
 }

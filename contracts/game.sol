@@ -9,6 +9,9 @@ contract Game is Ownable {
 	uint private blocksPerRound;
 	
 	// TODO add events to detect
+	
+	// TODO optimization? array of movestates and mapping[address1][address2] to indexes => subsequent games become cheaper
+	// but after checking gas usage
 
 	// TODO add extra bool for fair price
 	/*  move state structure */
@@ -117,6 +120,13 @@ contract Game is Ownable {
 	function toggleMoveState(address player1, address player2) internal {
 		moveStates[player1][player2].player1ToMove = !(moveStates[player1][player2].player1ToMove);
 		moveStates[player1][player2].blockNumberOfLastMove = block.number;
+	}
+	
+	/**
+	 *	@dev Initializes move state at start of game
+	 */
+	function initializeMoveState(address player1, address player2) internal {
+		moveStates[player1][player2] = MoveState(true, block.number);
 	}
 	
 	// TODO add payment stuff
