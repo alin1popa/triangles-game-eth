@@ -7,6 +7,8 @@ contract Game is Ownable {
 	/* modifiable by owner */
 	/* can only be increased, never decreased */
 	uint private blocksPerRound;
+	
+	// TODO add events to detect
 
 	// TODO add extra bool for fair price
 	/*  move state structure */
@@ -35,6 +37,13 @@ contract Game is Ownable {
 	 */
 	mapping(address => mapping(address => uint256)) private bids;
 	
+	/**
+	 * @dev Checks if game is not already running
+	 */
+	function gameIsNotRunning(address player1, address player2) view {
+		return (moveStates[player1][player2].blockNumberOfLastMove != 0);
+	}
+	
 	// TODO resetBid function
 	
 	/**
@@ -44,11 +53,10 @@ contract Game is Ownable {
 		/* check that we won't overwrite an existing bid */
 		require(bids[player1][player2] == 0);
 		
-		// TODO ce se intampla daca bidul e sub whatever si nu merge impartirea
-		// TODO ce se intampla daca bidul e 0
 		// TODO use safemaths
 		
 		/* owner's part is 5% of the amount players put into contract */
+		require(bid >= 20);
 		uint256 ownersPart = bid/20;
 		
 		/* update state vars */
@@ -80,7 +88,7 @@ contract Game is Ownable {
 	 *	@dev Checks that player one is allowed to make the next move
 	 */
 	// TODO check gas usage with ifs instead of requires => on false require eats up all the gas
-	function checkPlayerOneIsMoveAllowed(address player2) internal {
+	function checkPlayerOneIsMoveAllowed(address player2) internal view{
 		/* require that the game is running */
 		require(moveStates[msg.sender][player2].blockNumberOfLastMove > 0);
 		/* require that player 1 is to move */

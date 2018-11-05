@@ -31,8 +31,7 @@ contract TriangleGame is Game, GameWithBidQueue, GameWithInvitations {
 		boardStates[msg.sender][player2].boardPlayerOne[point1][point2] = true;
 		toggleMoveState(msg.sender, player2);
 	}
-	
-	// TODO replace these params everywhere with "opponent" sometime
+
 	function playerTwoMakeMove(address player1, uint8 point1, uint8 point2) public {
 		checkPlayerTwoIsMoveAllowed(player1);
 		checkPlayerTwoIsMoveValid(player1, point1, point2);

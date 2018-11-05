@@ -7,8 +7,6 @@ contract GameWithBidQueue is Game {
 	 * a player can enter the queue only by paying the bid
 	 */
 	mapping(uint256 => address) private queue;
-
-	// TODO require gameIsNotStarted
 	
 	/**
 	 *	@dev Put sender in queue or start the game if queue is not empty
@@ -22,9 +20,10 @@ contract GameWithBidQueue is Game {
 			/* if sender is the first to bid, add them to the queue */
 			queue[msg.value] = msg.sender;
 		} else {
-			/* if queue is not empty, start the game */
-			/* but clean the queue first */
+			/* if queue is not empty and can start, start the game */
+			/* but first clean the queue */
 			address player1 = queue[msg.value];
+			require(gameIsNotRunning(player1, msg.sender));
 			queue[msg.value] = 0;
 			
 			startGame(player1, msg.sender, msg.value);
