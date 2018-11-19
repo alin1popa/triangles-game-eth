@@ -8,12 +8,12 @@ contract Game is Ownable {
 	/* can only be increased, never decreased */
 	uint private blocksPerRound;
 	
+    // TODO make everything non reentrable
 	// TODO add events to detect
-	
 	// TODO optimization? array of movestates and mapping[address1][address2] to indexes => subsequent games become cheaper
-	// but after checking gas usage
-
+	// TODO check gas usage for require
 	// TODO add extra bool for fair price
+    
 	/*  move state structure */
 	struct MoveState {
 		bool player1ToMove;
@@ -90,7 +90,6 @@ contract Game is Ownable {
 	/**
 	 *	@dev Checks that player one is allowed to make the next move
 	 */
-	// TODO check gas usage with ifs instead of requires => on false require eats up all the gas
 	function checkPlayerOneIsMoveAllowed(address player2) internal view{
 		/* require that the game is running */
 		require(moveStates[msg.sender][player2].blockNumberOfLastMove > 0);
@@ -128,14 +127,6 @@ contract Game is Ownable {
 	function initializeMoveState(address player1, address player2) internal {
 		moveStates[player1][player2] = MoveState(true, block.number);
 	}
-	
-	// TODO add payment stuff
-	
-	// TODO move payment stuff to GameWithPayments
-	
-	// TODO move prototypes only to GameAbstract or GameGeneric or smth
-	
-	// TODO make everything non reentrable
 	
 	/**
 	 *	@dev Sets definitive win for player one
