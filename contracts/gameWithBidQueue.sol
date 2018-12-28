@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.5.0;
 
 contract GameWithBidQueue is Game {
 	/**
@@ -16,7 +16,7 @@ contract GameWithBidQueue is Game {
 		address currentBidder = queue[msg.value];
 		require(currentBidder != msg.sender);
 		
-		if (currentBidder == 0) {
+		if (currentBidder == address(0)) {
 			/* if sender is the first to bid, add them to the queue */
 			queue[msg.value] = msg.sender;
 		} else {
@@ -24,7 +24,7 @@ contract GameWithBidQueue is Game {
 			/* but first clean the queue */
 			address player1 = queue[msg.value];
 			require(gameIsNotRunning(player1, msg.sender));
-			queue[msg.value] = 0;
+			queue[msg.value] = address(0);
 			
 			startGame(player1, msg.sender, msg.value);
 		}
@@ -38,7 +38,7 @@ contract GameWithBidQueue is Game {
 		require(queue[bid] == msg.sender);
 		
 		/* reset the queue */
-		queue[bid] = 0;
+		queue[bid] = address(0);
 		
 		/* return money to sender */
 		msg.sender.transfer(bid);

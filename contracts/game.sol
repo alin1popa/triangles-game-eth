@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.5.0;
 
 import "libs/Ownable.sol";
 
@@ -43,7 +43,7 @@ contract Game is Ownable {
 	/**
 	 * @dev Checks if game is not already running
 	 */
-	function gameIsNotRunning(address player1, address player2) view {
+	function gameIsNotRunning(address player1, address player2) public view returns(bool) {
 		return (moveStates[player1][player2].blockNumberOfLastMove != 0);
 	}
 	
