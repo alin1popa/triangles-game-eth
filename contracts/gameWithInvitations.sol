@@ -25,7 +25,7 @@ contract GameWithInvitations is Game {
 			invitations[opponent][msg.sender] = false;
 			
 			/* start the game */
-			startGame(opponent, msg.sender, msg.value);
+			startGame(opponent, msg.sender);
 		} else {
 			/* if opponent hasn't already invited sender */
 			

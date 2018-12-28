@@ -20,6 +20,9 @@ contract TriangleGame is Game, GameWithBidQueue, GameWithInvitations {
 	 *	@dev Checks player one's proposed move is valid
 	 */
 	function checkPlayerOneIsMoveValid(address player2, uint8 point1, uint8 point2) internal view {
+        /* points go from 0 to 5 */
+        require(point1 <= 5)
+        require(point2 <= 5)
         /* we require lines to go from lower numbered point to higher numbered point */
 		require(point1 < point2);
         /* and we require the line is not already drawn by either of players */
@@ -31,6 +34,9 @@ contract TriangleGame is Game, GameWithBidQueue, GameWithInvitations {
 	 *	@dev Checks player one's proposed move is valid
 	 */
 	function checkPlayerTwoIsMoveValid(address player1, uint8 point1, uint8 point2) internal view {
+        /* points go from 0 to 5 */
+        require(point1 <= 5)
+        require(point2 <= 5)
         /* we require lines to go from lower numbered point to higher numbered point */
 		require(point1 < point2);
 		/* and we require the line is not already drawn by either of players */
@@ -71,7 +77,7 @@ contract TriangleGame is Game, GameWithBidQueue, GameWithInvitations {
     /**
      *  @dev Starts the game with required initial parameters
      */
-	function startGame(address player1, address player2, uint256 bid) internal {
+	function startGame(address player1, address player2) internal {
         /* resets the board */
 		boardStates[player1][player2] = BoardState();
         /* sets game's move state */

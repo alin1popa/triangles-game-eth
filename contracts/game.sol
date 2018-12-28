@@ -6,7 +6,7 @@ contract Game is Ownable {
 	/* timeout period in number of blocks */
 	/* modifiable by owner */
 	/* can only be increased, never decreased */
-	uint private blocksPerRound;
+	uint private blocksPerRound = 3;
 	
     // TODO make everything non reentrable
 	// TODO add events to detect
@@ -44,7 +44,7 @@ contract Game is Ownable {
 	 * @dev Checks if game is not already running
 	 */
 	function gameIsNotRunning(address player1, address player2) public view returns(bool) {
-		return (moveStates[player1][player2].blockNumberOfLastMove != 0);
+		return (moveStates[player1][player2].blockNumberOfLastMove == 0);
 	}
 	
 	// TODO resetBid function
@@ -69,7 +69,7 @@ contract Game is Ownable {
 	
 	/**
 	 *	@dev Withdraws owner's balance to owner's address
-	 *	@modifier onlyOwner
+	 *	modifier: onlyOwner
 	 */
 	function withdrawOwnerBalance() public onlyOwner {
 		uint256 toTransfer = ownerBalance;
@@ -190,5 +190,5 @@ contract Game is Ownable {
 		setWinForPlayerTwo(player1);
 	}
 	
-	function startGame(address player1, address player2, uint256 bid) internal;
+	function startGame(address player1, address player2) internal;
 }

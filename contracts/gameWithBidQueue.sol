@@ -26,7 +26,7 @@ contract GameWithBidQueue is Game {
 			require(gameIsNotRunning(player1, msg.sender));
 			queue[msg.value] = address(0);
 			
-			startGame(player1, msg.sender, msg.value);
+			startGame(player1, msg.sender);
 		}
 	}
 	
